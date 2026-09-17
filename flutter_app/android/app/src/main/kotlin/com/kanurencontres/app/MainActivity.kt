@@ -1,4 +1,4 @@
-package com.kanu.kanu
+package com.kanurencontres.app
 
 import io.flutter.embedding.android.FlutterActivity
 
