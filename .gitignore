@@ -8,6 +8,9 @@ flutter_app/.pub/
 flutter_app/android/local.properties
 flutter_app/android/.gradle/
 flutter_app/android/**/build/
+# Real release signing secrets — never commit these.
+flutter_app/android/key.properties
+flutter_app/android/keystore/
 flutter_app/android/**/gradle-wrapper.jar
 flutter_app/ios/Flutter/.last_build_id
 flutter_app/ios/Pods/

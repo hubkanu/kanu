@@ -39,19 +39,18 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'REPLACE_ME',
-    appId: 'REPLACE_ME',
-    messagingSenderId: 'REPLACE_ME',
-    projectId: 'REPLACE_ME',
-    storageBucket: 'REPLACE_ME',
+    apiKey: 'AIzaSyAZ4cSXWxfq37ehY2nuKbqhOGzN4iZxqP4',
+    appId: '1:305257104345:android:761ff1838b9162f8e58fc8',
+    messagingSenderId: '305257104345',
+    projectId: 'kanu-rencontres',
+    storageBucket: 'kanu-rencontres.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'REPLACE_ME',
-    appId: 'REPLACE_ME',
-    messagingSenderId: 'REPLACE_ME',
-    projectId: 'REPLACE_ME',
-    storageBucket: 'REPLACE_ME',
+    apiKey: 'AIzaSyBSHIbB0_xcIweyKlx1d_uG3fTRXBxzqBA',
+    appId: '1:305257104345:ios:1a4de17a206e842be58fc8',
+    messagingSenderId: '305257104345',
+    projectId: 'kanu-rencontres',
+    storageBucket: 'kanu-rencontres.firebasestorage.app',
     iosBundleId: 'com.kanu.kanu',
   );
 }

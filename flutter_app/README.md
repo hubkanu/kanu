@@ -22,35 +22,28 @@ La PWA appelle `window.webkit.messageHandlers.<nom>.postMessage(...)`
 au-dessus de `flutter_inappwebview` pour que le site fonctionne sans
 modification.
 
-## À faire avant de lancer l'app
+## Firebase
 
-0. **Note** : `android/app/google-services.json` est un fichier factice (projet
-   `kanu-dev-placeholder`, clé bidon) déjà présent dans le repo local — il ne
-   sert qu'à ce que le SDK Firebase natif trouve un `FirebaseApp` par défaut
-   au démarrage (sans lui, l'app crashe avec *"No Firebase App '[DEFAULT]'
-   has been created"*). Il est ignoré par git (`.gitignore`) et **doit être
-   remplacé** par un vrai fichier via `flutterfire configure` (étape 1)
-   avant toute mise en prod — avec lui, les notifications push resteront
-   silencieusement inactives (voir les meta-data
-   `firebase_messaging_auto_init_enabled`/`firebase_analytics_collection_enabled`
-   à `false` dans `AndroidManifest.xml`, à repasser à `true`/supprimer une
-   fois configuré).
+Configuré pour de vrai sur le projet **`kanu-rencontres`**
+(console : https://console.firebase.google.com/project/kanu-rencontres/overview) —
+`lib/firebase_options.dart`, `android/app/google-services.json` et
+`ios/Runner/GoogleService-Info.plist` contiennent de vraies clés (pas des
+secrets sensibles côté client, mais évitez de les republier ailleurs sans
+raison). Le `GoogleService-Info.plist` original du shell iOS ne contenait que
+des valeurs de template PWABuilder (projet `pwabuilder-ios-template`, clés à
+zéro) — Firebase n'avait jamais été réellement branché, même côté iOS
+(`AppDelegate.swift` a `FirebaseApp.configure()` commenté).
 
-1. **Firebase** (push notifications). Le `GoogleService-Info.plist` original
-   ne contenait que des valeurs de template PWABuilder (projet
-   `pwabuilder-ios-template`, clés à zéro) — Firebase n'a jamais été
-   réellement branché, même côté iOS (`AppDelegate.swift` a
-   `FirebaseApp.configure()` commenté). Il faut créer/relier un vrai projet :
+Pour reconfigurer plus tard (nouveau projet, nouvelles plateformes) :
 
-   ```bash
-   dart pub global activate flutterfire_cli
-   flutterfire configure
-   ```
+```bash
+dart pub global activate flutterfire_cli
+flutterfire configure
+```
 
-   Ça régénère `lib/firebase_options.dart` et dépose `google-services.json`
-   / `GoogleService-Info.plist` au bon endroit.
+## À faire avant de publier
 
-2. **iOS — associated domains & push**. `ios/Runner/Runner.entitlements` a
+1. **iOS — associated domains & push**. `ios/Runner/Runner.entitlements` a
    été créé (associated domains `kanu-rencontres.com` + `aps-environment`)
    mais Xcode doit être configuré pour l'utiliser : ouvrir
    `ios/Runner.xcworkspace`, sélectionner la target Runner → Signing &
@@ -100,10 +93,24 @@ flutter run
   `.github/workflows/flutter-build.yml`). Le projet a dû être épinglé sur
   Gradle 8.14.2 / AGP 8.11.1 / Kotlin 2.2.20 car le plugin
   `flutter_inappwebview_android` casse avec l'AGP 9 par défaut du template
-  Flutter (appel à une API de proguard supprimée). Pour un vrai APK/AAB de
-  prod signé, il faut configurer `android/app/build.gradle.kts` avec un
-  vrai `signingConfig` (garder le mien basé sur les clés debug ne convient
-  pas pour le Play Store).
+  Flutter (appel à une API de proguard supprimée).
+
+  Pour une release signée + obfusquée (ce qu'attend le Play Store) :
+
+  ```bash
+  flutter build appbundle --release --obfuscate --split-debug-info=build/symbols
+  ```
+
+  Un vrai keystore de release existe déjà (`android/keystore/kanu-release.jks`
+  + `android/key.properties`, tous les deux **gitignorés** — jamais commités).
+  `android/app/build.gradle.kts` l'utilise automatiquement s'il est présent,
+  sinon retombe sur la clé debug (c'est ce qui permet à la CI, qui n'a pas ces
+  secrets, de continuer à fonctionner). **Le keystore et ses mots de passe
+  doivent être sauvegardés en lieu sûr en dehors de ce repo** (password
+  manager, coffre chiffré) : sans eux, impossible de publier une mise à jour
+  de l'app sous la même identité de signature Play Store. Si vous les perdez,
+  générez-en un nouveau avec `keytool -genkeypair` et remplissez
+  `key.properties` en conséquence.
 
 - **iOS** : je n'ai pas de Mac dans cet environnement, donc je n'ai pas pu
   compiler ni tester l'app iOS moi-même. Le pipeline CI

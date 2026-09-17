@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "000000000000",
-    "project_id": "kanu-dev-placeholder",
-    "storage_bucket": "kanu-dev-placeholder.appspot.com"
+    "project_number": "305257104345",
+    "project_id": "kanu-rencontres",
+    "storage_bucket": "kanu-rencontres.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "mobilesdk_app_id": "1:305257104345:android:761ff1838b9162f8e58fc8",
         "android_client_info": {
           "package_name": "com.kanu.kanu"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDPLACEHOLDER00000000000000000000000"
+          "current_key": "AIzaSyAZ4cSXWxfq37ehY2nuKbqhOGzN4iZxqP4"
         }
       ],
       "services": {
