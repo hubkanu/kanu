@@ -32,7 +32,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
   InAppWebViewController? _controller;
   PullToRefreshController? _pullToRefreshController;
 
-  late final PushNotificationsBridge _pushBridge;
+  // Null until Firebase is really configured: PushNotificationsBridge's
+  // constructor eagerly evaluates `FirebaseMessaging.instance`, which
+  // throws '[core/no-app]' if Firebase.initializeApp() was never called.
+  PushNotificationsBridge? _pushBridge;
   late final DeepLinksBridge _deepLinksBridge;
 
   bool _htmlIsLoaded = false;
@@ -49,7 +52,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void initState() {
     super.initState();
-    _pushBridge = PushNotificationsBridge(() => _controller);
+    if (isFirebaseConfigured) {
+      _pushBridge = PushNotificationsBridge(() => _controller);
+    }
     _deepLinksBridge = DeepLinksBridge(() => _controller);
     _deepLinksBridge.init();
 
@@ -220,7 +225,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   void _attachBridges(InAppWebViewController controller) {
-    if (isFirebaseConfigured) _pushBridge.attach(controller);
+    _pushBridge?.attach(controller);
     controller.addJavaScriptHandler(
       handlerName: cfg.BridgeMessages.print,
       callback: (_) async {
