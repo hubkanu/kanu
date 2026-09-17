@@ -2,8 +2,13 @@ plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-    // Reads android/app/google-services.json (run `flutterfire configure` to generate it).
-    id("com.google.gms.google-services")
+}
+
+// Only apply google-services once `flutterfire configure` has dropped a real
+// google-services.json here — applying it unconditionally hard-fails the
+// build (including plain `flutter build apk`) until Firebase is wired up.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
 }
 
 android {

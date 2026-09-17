@@ -71,3 +71,27 @@ modification.
 flutter pub get
 flutter run
 ```
+
+## Builds
+
+- **Android** : `flutter build apk --debug` fonctionne directement (testé — voir
+  `.github/workflows/flutter-build.yml`). Le projet a dû être épinglé sur
+  Gradle 8.14.2 / AGP 8.11.1 / Kotlin 2.2.20 car le plugin
+  `flutter_inappwebview_android` casse avec l'AGP 9 par défaut du template
+  Flutter (appel à une API de proguard supprimée). Pour un vrai APK/AAB de
+  prod signé, il faut configurer `android/app/build.gradle.kts` avec un
+  vrai `signingConfig` (garder le mien basé sur les clés debug ne convient
+  pas pour le Play Store).
+
+- **iOS** : je n'ai pas de Mac dans cet environnement, donc je n'ai pas pu
+  compiler ni tester l'app iOS moi-même. Le pipeline CI
+  (`.github/workflows/flutter-build.yml`, job `ios`) compile la cible iOS
+  en `--no-codesign` à chaque push pour valider que ça build, mais ça ne
+  produit pas d'`.ipa` distribuable. Pour un vrai build iOS, il faut :
+  1. Ouvrir `ios/Runner.xcworkspace` sur un Mac avec Xcode.
+  2. Renseigner une équipe Apple Developer (Signing & Capabilities) et
+     ajouter les capacités "Associated Domains" + "Push Notifications"
+     (voir plus haut).
+  3. `flutter build ios` puis archiver/exporter depuis Xcode, ou passer par
+     Xcode Cloud / Codemagic / Fastlane si vous voulez l'automatiser sans
+     Mac local.

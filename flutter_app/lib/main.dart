@@ -6,14 +6,22 @@ import 'bridge/push_notifications.dart';
 import 'firebase_options.dart';
 import 'webview_screen.dart';
 
+/// True once `flutterfire configure` has replaced the placeholder values in
+/// firebase_options.dart. Push notifications are silently disabled until
+/// then, so the app can still be built and run to test the WebView shell.
+bool get isFirebaseConfigured =>
+    DefaultFirebaseOptions.currentPlatform.apiKey != 'REPLACE_ME';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Equivalent of `FirebaseApp.configure()` in AppDelegate.swift.
   // Run `flutterfire configure` once to generate firebase_options.dart
-  // for this project before this call will succeed.
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  // for this project before this becomes active.
+  if (isFirebaseConfigured) {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  }
 
   runApp(const KanuApp());
 }

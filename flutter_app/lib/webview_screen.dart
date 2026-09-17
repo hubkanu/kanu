@@ -11,6 +11,7 @@ import 'bridge/deep_links.dart';
 import 'bridge/js_bridge_shim.dart';
 import 'bridge/push_notifications.dart';
 import 'config.dart' as cfg;
+import 'main.dart' show isFirebaseConfigured;
 
 /// Direct port of `src/KANU/ViewController.swift` + `src/KANU/WebView.swift`.
 ///
@@ -219,7 +220,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   void _attachBridges(InAppWebViewController controller) {
-    _pushBridge.attach(controller);
+    if (isFirebaseConfigured) _pushBridge.attach(controller);
     controller.addJavaScriptHandler(
       handlerName: cfg.BridgeMessages.print,
       callback: (_) async {
