@@ -66,6 +66,18 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
 
+  # Generates the real KANU app icon (Android + iOS) from assets/images/logo.png,
+  # replacing the default Flutter launcher icon. Run:
+  #   dart run flutter_launcher_icons
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
+  adaptive_icon_background: "#080808"
+  adaptive_icon_foreground: "assets/images/logo.png"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

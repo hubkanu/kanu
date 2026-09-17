@@ -24,6 +24,18 @@ modification.
 
 ## À faire avant de lancer l'app
 
+0. **Note** : `android/app/google-services.json` est un fichier factice (projet
+   `kanu-dev-placeholder`, clé bidon) déjà présent dans le repo local — il ne
+   sert qu'à ce que le SDK Firebase natif trouve un `FirebaseApp` par défaut
+   au démarrage (sans lui, l'app crashe avec *"No Firebase App '[DEFAULT]'
+   has been created"*). Il est ignoré par git (`.gitignore`) et **doit être
+   remplacé** par un vrai fichier via `flutterfire configure` (étape 1)
+   avant toute mise en prod — avec lui, les notifications push resteront
+   silencieusement inactives (voir les meta-data
+   `firebase_messaging_auto_init_enabled`/`firebase_analytics_collection_enabled`
+   à `false` dans `AndroidManifest.xml`, à repasser à `true`/supprimer une
+   fois configuré).
+
 1. **Firebase** (push notifications). Le `GoogleService-Info.plist` original
    ne contenait que des valeurs de template PWABuilder (projet
    `pwabuilder-ios-template`, clés à zéro) — Firebase n'a jamais été
@@ -54,6 +66,16 @@ modification.
    iOS existante juste pour l'écran de chargement. Pour l'icône de l'app
    elle-même, utiliser `flutter_launcher_icons` avec les PNG de
    `../src/KANU/Assets.xcassets/AppIcon.appiconset`.
+
+## "Application non reconnue" / Play Protect à l'installation
+
+En installant l'APK debug hors Play Store (sideload), Android peut afficher
+un avertissement du type "application non reconnue" ou bloquer l'installation
+via Play Protect. C'est normal et attendu pour n'importe quel APK debug non
+distribué par le Play Store : il est signé avec la clé de debug (pas une clé
+de confiance), et Google n'a aucune réputation sur ce binaire. Ça disparaît
+dès que l'app est distribuée via un canal Play Console (même la piste
+"test interne"), qui applique la signature Play App Signing.
 
 ## Différences assumées par rapport à l'original
 
