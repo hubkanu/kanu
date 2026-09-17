@@ -260,7 +260,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
                       allowsInlineMediaPlayback: true,
                       useShouldOverrideUrlLoading: true,
                       useOnDownloadStart: true,
-                      applicationNameForUserAgent: 'Safari/604.1',
+                      // Only meaningful on iOS, where the WebView really is
+                      // WebKit/Safari underneath (matches WebView.swift).
+                      // Android's WebView is Chromium: forcing a Safari-shaped
+                      // user agent there made the site serve WebKit-only
+                      // <object>/<embed> content Chromium can't render,
+                      // showing a grey "Couldn't load plugin" banner instead
+                      // of the page.
+                      applicationNameForUserAgent: Platform.isIOS
+                          ? 'Safari/604.1'
+                          : null,
                       isInspectable: true,
                       transparentBackground: false,
                     ),
