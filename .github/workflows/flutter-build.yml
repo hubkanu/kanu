@@ -27,28 +27,6 @@ jobs:
       - run: flutter analyze
       - run: flutter test
 
-  android:
-    needs: analyze
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "17"
-      - run: flutter pub get
-      # Debug build: doesn't need a signing config or google-services.json
-      # (see android/app/build.gradle.kts — the google-services plugin only
-      # applies once flutterfire configure has dropped a real one in).
-      - run: flutter build apk --debug
-      - uses: actions/upload-artifact@v4
-        with:
-          name: kanu-debug-apk
-          path: flutter_app/build/app/outputs/flutter-apk/app-debug.apk
-
   ios:
     needs: analyze
     runs-on: macos-latest
