@@ -45,9 +45,9 @@ jobs:
   ios-testflight:
     needs: analyze
     runs-on: macos-latest
-    # Only runs on pushes to main, and only if the signing secrets exist —
-    # forks/PRs never see repo secrets, so this job just gets skipped there.
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Runs on pushes to main or a manual trigger — never on PRs, since forks/PRs
+    # don't get repo secrets anyway (the job would just fail there).
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     env:
       KEYCHAIN_PATH: ${{ github.workspace }}/signing.keychain-db
     steps:
