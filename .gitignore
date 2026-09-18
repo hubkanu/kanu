@@ -15,7 +15,6 @@ flutter_app/android/**/gradle-wrapper.jar
 flutter_app/ios/Flutter/.last_build_id
 flutter_app/ios/Pods/
 flutter_app/ios/.symlinks/
-flutter_app/ios/Runner/GoogleService-Info.plist
 flutter_app/macos/Pods/
 flutter_app/**/*.iml
 flutter_app/**/*.ipr
@@ -27,6 +26,9 @@ src/Pods/
 src/**/xcuserdata/
 src/**/DerivedData/
 src/**/*.xcuserstate
+
+# Apple signing material generated locally — never commit private keys.
+apple-signing/
 
 # OS / editor
 .DS_Store
