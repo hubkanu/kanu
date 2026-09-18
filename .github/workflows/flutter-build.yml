@@ -28,7 +28,6 @@ jobs:
       - run: flutter test
 
   ios:
-    needs: analyze
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +42,6 @@ jobs:
       - run: flutter build ios --release --no-codesign
 
   ios-testflight:
-    needs: analyze
     runs-on: macos-latest
     # Runs on pushes to main or a manual trigger — never on PRs, since forks/PRs
     # don't get repo secrets anyway (the job would just fail there).
