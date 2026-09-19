@@ -29,6 +29,7 @@ src/**/*.xcuserstate
 
 # Apple signing material generated locally — never commit private keys.
 apple-signing/
+flutter_app/appstore_screenshots/
 
 # OS / editor
 .DS_Store
