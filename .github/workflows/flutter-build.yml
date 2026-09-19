@@ -1,10 +1,3 @@
-- name: Upload IPA Artifact
-- uses: actions/upload-artifact@v4
-
-with:
-- name: app-ios 
-path: "build/**.ipa"
-
 name: Flutter build
 
 on:
@@ -41,17 +34,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-      # No Apple signing certificate is configured in this repo, so this only
-      # validates that the iOS target compiles (equivalent of an Xcode
-      # "Build" without "Archive"). A distributable .ipa still needs a real
-      # Apple Developer account and signing set up in Xcode on a Mac, or
-      # signing secrets added to this workflow.
       - run: flutter build ios --release --no-codesign
 
   ios-testflight:
     runs-on: macos-latest
-    # Runs on pushes to main or a manual trigger — never on PRs, since forks/PRs
-    # don't get repo secrets anyway (the job would just fail there).
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     env:
       KEYCHAIN_PATH: ${{ github.workspace }}/signing.keychain-db
@@ -128,6 +114,12 @@ jobs:
           flutter build ipa \
             --release \
             --export-options-plist=ios/ExportOptions.plist
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-ios
+          path: flutter_app/build/ios/ipa/*.ipa
 
       - name: Upload to TestFlight
         run: |
