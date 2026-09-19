@@ -1,8 +1,10 @@
-name: Upload IPA Artifact
-uses: actions/upload-artifact@v4
+- name: Upload IPA Artifact
+- uses: actions/upload-artifact@v4
+
 with:
-name: app-ios
-path: chemin/vers/votre/application.ipa
+- name: app-ios 
+path: "build/**.ipa"
+
 name: Flutter build
 
 on:
