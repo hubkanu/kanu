@@ -27,13 +27,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Capture Video by user request</string>
+	<string>Votre caméra est utilisée pour prendre une photo de profil ou l'envoyer directement depuis votre compte KANU.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Capture Audio by user request</string>
+	<string>Votre microphone est utilisé pour enregistrer un message vocal que vous envoyez volontairement à un membre.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>KANU utilise votre position uniquement à votre demande pour rechercher des membres proches de vous.</string>
+	<string>Votre position est utilisée uniquement après votre accord, pour afficher les membres compatibles situés près de chez vous.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>KANU utilise votre position uniquement à votre demande pour rechercher des membres proches de vous.</string>
+	<string>Votre position est utilisée uniquement après votre accord, pour afficher les membres compatibles situés près de chez vous.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
