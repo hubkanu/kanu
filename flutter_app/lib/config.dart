@@ -62,8 +62,6 @@ const List<String> externalSchemes = [
   'fb',
   'fb-messenger',
   'sms',
-  'itms-services',
   'itms-apps',
-  'itms',
   'maps',
 ];
