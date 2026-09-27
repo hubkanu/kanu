@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'bridge/deep_links.dart';
+import 'bridge/in_app_purchase.dart';
 import 'bridge/js_bridge_shim.dart';
 import 'bridge/push_notifications.dart';
 import 'config.dart' as cfg;
@@ -36,6 +37,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   // constructor eagerly evaluates `FirebaseMessaging.instance`, which
   // throws '[core/no-app]' if Firebase.initializeApp() was never called.
   PushNotificationsBridge? _pushBridge;
+  late final InAppPurchaseBridge _inAppPurchaseBridge;
   late final DeepLinksBridge _deepLinksBridge;
 
   bool _htmlIsLoaded = false;
@@ -55,6 +57,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     if (isFirebaseConfigured) {
       _pushBridge = PushNotificationsBridge(() => _controller);
     }
+    _inAppPurchaseBridge = InAppPurchaseBridge(() => _controller);
     _deepLinksBridge = DeepLinksBridge(() => _controller);
     _deepLinksBridge.init();
 
@@ -226,6 +229,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   void _attachBridges(InAppWebViewController controller) {
     _pushBridge?.attach(controller);
+    _inAppPurchaseBridge.attach(controller);
     controller.addJavaScriptHandler(
       handlerName: cfg.BridgeMessages.print,
       callback: (_) async {

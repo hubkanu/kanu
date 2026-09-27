@@ -25,6 +25,16 @@ String get platformCookieValue {
 
 const String platformCookieName = 'app-platform';
 
+/// App Store Connect product IDs for the KANU premium subscription.
+/// `com.kanurencontres.app.subscription.monthly` (mensuel) et
+/// `com.kanurencontres.app.subscription.tri` (trimestriel) : les deux sont
+/// interrogés au chargement et passés à la couche web pour que la PWA
+/// puisse choisir la bonne formule.
+const List<String> iapProductIds = [
+  'com.kanurencontres.app.subscription.monthly',
+  'com.kanurencontres.app.subscription.tri',
+];
+
 /// UI options (see Settings.swift for the original comments).
 const String displayMode = 'standalone'; // standalone / fullscreen
 const bool adaptiveUIStyle = true; // adapt status bar to page background
@@ -39,6 +49,9 @@ class BridgeMessages {
   static const String pushPermissionRequest = 'push-permission-request';
   static const String pushPermissionState = 'push-permission-state';
   static const String pushToken = 'push-token';
+  static const String iapLoadProducts = 'iap-load-products';
+  static const String iapPurchase = 'iap-purchase';
+  static const String iapRestorePurchases = 'iap-restore-purchases';
 }
 
 /// Custom event names dispatched back into the page, matching the
@@ -49,6 +62,10 @@ class BridgeEvents {
   static const String pushToken = 'push-token';
   static const String pushNotification = 'push-notification';
   static const String pushNotificationClick = 'push-notification-click';
+  static const String iapProductsLoaded = 'iap-products-loaded';
+  static const String iapPurchaseResult = 'iap-purchase-result';
+  static const String iapRestoreResult = 'iap-restore-result';
+  static const String iapError = 'iap-error';
 }
 
 /// Schemes that must always be handed off to another app rather than

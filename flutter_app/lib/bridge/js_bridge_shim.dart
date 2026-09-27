@@ -17,6 +17,9 @@ final String jsBridgeShim = () {
     BridgeMessages.pushPermissionRequest,
     BridgeMessages.pushPermissionState,
     BridgeMessages.pushToken,
+    BridgeMessages.iapLoadProducts,
+    BridgeMessages.iapPurchase,
+    BridgeMessages.iapRestorePurchases,
   ];
 
   final handlerEntries = handlers
