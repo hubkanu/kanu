@@ -13,6 +13,7 @@ import 'bridge/js_bridge_shim.dart';
 import 'bridge/push_notifications.dart';
 import 'config.dart' as cfg;
 import 'main.dart' show isFirebaseConfigured;
+import 'native_subscription_sheet.dart';
 
 /// Direct port of `src/KANU/ViewController.swift` + `src/KANU/WebView.swift`.
 ///
@@ -74,21 +75,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
     _retryTimer?.cancel();
     _deepLinksBridge.dispose();
     super.dispose();
-  }
-
-  Future<void> _setPlatformCookie() async {
-    await CookieManager.instance().setCookie(
-      url: WebUri(cfg.rootUrl.toString()),
-      name: cfg.platformCookieName,
-      value: cfg.platformCookieValue,
-      domain: cfg.rootUrl.host,
-      path: '/',
-      isSecure: false,
-      expiresDate:
-          DateTime.now()
-              .add(const Duration(days: 365))
-              .millisecondsSinceEpoch,
-    );
   }
 
   Uri get _launchUrl => _deepLinksBridge.initialLink ?? cfg.rootUrl;
@@ -256,6 +242,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   ),
                 ],
               ),
+            if (!_showAuthToolbar)
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  icon: const Icon(Icons.workspace_premium_outlined),
+                  label: const Text('Abonnement'),
+                  onPressed: () => showNativeSubscriptionSheet(context),
+                ),
+              ),
             Expanded(
               child: Stack(
                 children: [
@@ -285,7 +280,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     pullToRefreshController: _pullToRefreshController,
                     onWebViewCreated: (controller) async {
                       _controller = controller;
-                      await _setPlatformCookie();
                       await controller.addUserScript(
                         userScript: UserScript(
                           source: jsBridgeShim,

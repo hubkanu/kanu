@@ -34,6 +34,8 @@
 	<string>Votre position est utilisée uniquement après votre accord, pour afficher les membres compatibles situés près de chez vous.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Votre position est utilisée uniquement après votre accord, pour afficher les membres compatibles situés près de chez vous.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Votre autorisation permet à KANU de respecter vos choix de confidentialité lorsque le contenu web utilise des cookies de mesure et de personnalisation.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

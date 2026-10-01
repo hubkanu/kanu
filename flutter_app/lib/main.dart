@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 import 'bridge/push_notifications.dart';
 import 'firebase_options.dart';
@@ -14,6 +16,11 @@ bool get isFirebaseConfigured =>
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Ask before creating the WebView, which may load cookie-based web content.
+  if (defaultTargetPlatform == TargetPlatform.iOS) {
+    await AppTrackingTransparency.requestTrackingAuthorization();
+  }
 
   // Equivalent of `FirebaseApp.configure()` in AppDelegate.swift.
   // Run `flutterfire configure` once to generate firebase_options.dart
