@@ -92,6 +92,11 @@ jobs:
 
       - name: Build signed IPA
         run: |
+          set -euo pipefail
+          PROFILE_NAME="${{ steps.profile.outputs.name }}"
+          echo "Profil de provisioning utilisé : $PROFILE_NAME"
+          sed -i '' "s/PROVISIONING_PROFILE_SPECIFIER = .*/PROVISIONING_PROFILE_SPECIFIER = \"$PROFILE_NAME\";/" ios/Runner.xcodeproj/project.pbxproj
+          grep PROVISIONING_PROFILE_SPECIFIER ios/Runner.xcodeproj/project.pbxproj
           flutter build ipa \
             --release \
             --build-number=${{ github.run_number }} \
