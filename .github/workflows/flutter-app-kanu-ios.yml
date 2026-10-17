@@ -83,7 +83,7 @@ jobs:
             <string>manual</string>
             <key>provisioningProfiles</key>
             <dict>
-              <key>com.kanurencontres.app</key>
+              <key>fr.kanurencontres.appli</key>
               <string>${{ steps.profile.outputs.name }}</string>
             </dict>
           </dict>
