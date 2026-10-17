@@ -39,39 +39,47 @@ jobs:
         run: |
           set -euo pipefail
           DEVICES=(
-            "iPhone 16 Pro Max|iphone"
-            "iPad Pro 13-inch (M4)|ipad"
+            "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro-Max|iphone"
+            "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M4-12GB|ipad"
           )
+
+          RUNTIME=$(xcrun simctl list runtimes | grep -oE "com\.apple\.CoreSimulator\.SimRuntime\.iOS-[0-9]+-[0-9]+" | tail -1)
+          echo "Runtime utilisé : $RUNTIME"
+          if [ -z "$RUNTIME" ]; then echo "::error::Aucun runtime iOS disponible"; exit 1; fi
 
           mkdir -p screenshots
 
           for entry in "${DEVICES[@]}"; do
-            device="${entry%%|*}"
+            devtype="${entry%%|*}"
             slug="${entry##*|}"
             out="screenshots/$slug"
             mkdir -p "$out"
             echo "=================================================="
-            echo "== Capture sur : $device  ->  $out"
+            echo "== Capture : $devtype  ->  $out"
             echo "=================================================="
 
-            rm -f screenshots/store_*.png
+            UDID=$(xcrun simctl create "kanu-$slug" "$devtype" "$RUNTIME")
+            echo "UDID=$UDID"
+            xcrun simctl boot "$UDID" 2>/dev/null || true
+            xcrun simctl bootstatus "$UDID" -b || true
 
-            xcrun simctl boot "$device" 2>/dev/null || true
+            rm -f screenshots/store_*.png
             flutter drive \
               --driver=test_driver/integration_test.dart \
               --target=integration_test/screenshots_test.dart \
-              -d "$device"
+              -d "$UDID"
 
             if ls screenshots/store_*.png 1>/dev/null 2>&1; then
               mv screenshots/store_*.png "$out/"
               echo "== Capturé :"
               ls -la "$out"
             else
-              echo "::error::Aucune capture générée pour $device"
+              echo "::error::Aucune capture générée pour $devtype"
               exit 1
             fi
 
-            xcrun simctl shutdown "$device" 2>/dev/null || true
+            xcrun simctl shutdown "$UDID" 2>/dev/null || true
+            xcrun simctl delete "$UDID" 2>/dev/null || true
           done
 
       - name: Vérifier les dimensions
