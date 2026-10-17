@@ -1,0 +1,89 @@
+name: iOS Screenshots (App Store)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/ios-screenshots.yml"
+
+jobs:
+  ios-screenshots:
+    name: Captures iPhone + iPad
+    runs-on: macos-latest
+
+    defaults:
+      run:
+        working-directory: flutter_app_kanu
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Flutter dependencies
+        run: flutter pub get
+
+      - name: Lister les simulateurs disponibles
+        run: |
+          echo "== Device types =="
+          xcrun simctl list devicetypes | grep -iE "iPhone 16 Pro Max|iPad Pro 13-inch|iPad Pro 12.9-inch" || true
+          echo "== Runtimes =="
+          xcrun simctl list runtimes || true
+
+      - name: Capturer les screenshots (iPhone + iPad)
+        run: |
+          set -euo pipefail
+          DEVICES=(
+            "iPhone 16 Pro Max|iphone"
+            "iPad Pro 13-inch (M4)|ipad"
+          )
+
+          mkdir -p screenshots
+
+          for entry in "${DEVICES[@]}"; do
+            device="${entry%%|*}"
+            slug="${entry##*|}"
+            out="screenshots/$slug"
+            mkdir -p "$out"
+            echo "=================================================="
+            echo "== Capture sur : $device  ->  $out"
+            echo "=================================================="
+
+            rm -f screenshots/store_*.png
+
+            xcrun simctl boot "$device" 2>/dev/null || true
+            flutter drive \
+              --driver=test_driver/integration_test.dart \
+              --target=integration_test/screenshots_test.dart \
+              -d "$device"
+
+            if ls screenshots/store_*.png 1>/dev/null 2>&1; then
+              mv screenshots/store_*.png "$out/"
+              echo "== Capturé :"
+              ls -la "$out"
+            else
+              echo "::error::Aucune capture générée pour $device"
+              exit 1
+            fi
+
+            xcrun simctl shutdown "$device" 2>/dev/null || true
+          done
+
+      - name: Vérifier les dimensions
+        run: |
+          echo "== Dimensions des captures =="
+          find screenshots -name "*.png" | while read -r f; do
+            dim=$(sips -g pixelWidth -g pixelHeight "$f" | awk -F': ' '/pixelWidth|pixelHeight/{printf "%s%s", sep, $2; sep="x"} END{print ""}')
+            printf "%-60s %s\n" "$f" "$dim"
+          done
+
+      - name: Upload artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-screenshots
+          path: flutter_app_kanu/screenshots/
+          if-no-files-found: error
