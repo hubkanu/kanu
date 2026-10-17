@@ -1,0 +1,12 @@
+{
+  "name": "kanu-screenshots",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Genere les captures App Store de KANU depuis le build web Flutter (local, sans Mac).",
+  "scripts": {
+    "capture": "node capture.js"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}

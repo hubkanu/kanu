@@ -31,6 +31,10 @@ src/**/*.xcuserstate
 apple-signing/
 flutter_app/appstore_screenshots/
 
+# Outils locaux (generation des captures App Store depuis le build web)
+tools/screenshots/node_modules/
+tools/screenshots/output/
+
 # OS / editor
 .DS_Store
 Thumbs.db
